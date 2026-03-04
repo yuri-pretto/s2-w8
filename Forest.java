@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 public class Forest {
     private String name;
     private String type;
@@ -15,7 +16,7 @@ public class Forest {
     private Tree[][] grid;
 
     public Forest(String name, String type, String vegetation, double burnRate, int burnDuration, int initialTreeCount, int gridRows, int gridCols) {
-        this.grid = null; //TODO; initialize grid to using gridRows and gridCols
+        this.grid = new Tree[gridRows][gridCols]; //TODO; initialize grid to using gridRows and gridCols
         this.name = name;
         this.type = type;
         this.vegetation = vegetation;
@@ -26,19 +27,32 @@ public class Forest {
     }
     
     public void initializeForest(){
-        // Step 1: Determine how many cells in the grid should start as TREE
-        //         based on initialTreeCount and the grid dimensions.
-        // Step 2: Fill the grid with EMPTY trees first so every cell has a Tree object.
-        // Step 3: Randomly place TREE states until the target initial tree count is reached.
+        for(int r = 0; r < grid.length; r++){
+            for(int c = 0; c < grid[0].length; c++){
+                grid[r][c] = new Tree(Tree.EMPTY);
+            }
+        }
+       
+        for(int i = 0; i < initialTreeCount; i++){
+            int rRow = (int)(Math.random()*grid.length);
+            int rCol = (int)(Math.random()*grid[0].length);
+            if(grid[rRow][rCol].getState()!=Tree.TREE){
+                grid[rRow][rCol] = new Tree(1);
+            } else{
+                i--;
+            }
+        }
         // Step 4: Reset any burn-time/state tracking needed for a fresh simulation start.
     }
 
     public Tree[][] deepCopy(){
-        // Step 1: Create a new Tree[][] with the same dimensions as grid.
-        // Step 2: Loop through every cell in grid.
-        // Step 3: Copy each Tree by value (state and burnTime), not by reference.
-        // Step 4: Return the copied Tree[][].
-        return null;
+        Tree[][] copy = new Tree[grid.length][grid[0].length];
+        for(int r = 0; r < copy.length; r++){
+            for(int c = 0; c < copy[0].length; c++){
+                copy[r][c] = new Tree(grid[r][c]);
+            }
+        }
+        return copy;
     }
 
     public void spreadFire() {
